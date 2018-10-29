@@ -5,10 +5,9 @@ import random
 import subprocess
 
 import tqdm
-from video_object import VideoObject
 
-project_root = 'PATH TO cnn-feature-extractor-into-lstm'
-ffmpeg_path = 'PATH TO ffmpeg'
+from utility.utility import retrieve_videoobject_subsets, project_root, ffmpeg_path
+from utility.video_object import VideoObject
 
 
 def main():
@@ -23,8 +22,8 @@ def retrieve_dataset():
     split_version = '01'  # Possible values are 01, 02 or 03
 
     # Check paths existence
-    testfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'testlist' + split_version + '.txt')
-    trainfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'trainlist' + split_version + '.txt')
+    testfile = os.path.join(project_root(), 'data', 'ucfTrainTestlist', 'testlist' + split_version + '.txt')
+    trainfile = os.path.join(project_root(), 'data', 'ucfTrainTestlist', 'trainlist' + split_version + '.txt')
     if not os.path.exists(testfile):
         print('Incorrect path for file: ' + testfile)
         return -1
@@ -57,7 +56,7 @@ def generate_classes(video_list):
     classes = list(set(map(lambda video: video.label, video_list)))  # set is used to obtain distinct element
     classes.sort()
 
-    with open(os.path.join(project_root, 'data', 'classes.csv'), 'w', newline='\n') as classes_csv:
+    with open(os.path.join(project_root(), 'data', 'classes.csv'), 'w', newline='\n') as classes_csv:
         classes_csv_writer = csv.writer(classes_csv, delimiter=',')
         for label in classes:
             classes_csv_writer.writerow([label])
@@ -100,38 +99,23 @@ def split_dataset(video_list):
 
     # Write the subset generated into dedicated csv
     header = ['LABEL', 'GROUP', 'CLIP']
-    with open(os.path.join(project_root, 'data', 'train-set.csv'), 'w', newline='\n') as train_csv:
+    with open(os.path.join(project_root(), 'data', 'train-set.csv'), 'w', newline='\n') as train_csv:
         train_csv_writer = csv.writer(train_csv, delimiter=',')
         train_csv_writer.writerow(header)
         for video in train_set:
             train_csv_writer.writerow([video.label, video.group, video.clip])
 
-    with open(os.path.join(project_root, 'data', 'validation-set.csv'), 'w', newline='\n') as validation_csv:
+    with open(os.path.join(project_root(), 'data', 'validation-set.csv'), 'w', newline='\n') as validation_csv:
         validation_csv_writer = csv.writer(validation_csv, delimiter=',')
         validation_csv_writer.writerow(header)
         for video in validation_set:
             validation_csv_writer.writerow([video.label, video.group, video.clip])
 
-    with open(os.path.join(project_root, 'data', 'test-set.csv'), 'w', newline='\n') as test_csv:
+    with open(os.path.join(project_root(), 'data', 'test-set.csv'), 'w', newline='\n') as test_csv:
         test_csv_writer = csv.writer(test_csv, delimiter=',')
         test_csv_writer.writerow(header)
         for video in test_set:
             test_csv_writer.writerow([video.label, video.group, video.clip])
-
-
-def retrieve_videoobject_subsets(subsets):
-    videoobject_subsets = []
-    # Loop over the three subsets: train, validation, test
-    for subset in subsets:
-        videoobject_subset = []
-        # Open the csv file and retrieve a list of VideoObject
-        with open(os.path.join(project_root, 'data', subset + '-set.csv'), 'r', newline='\n') as csvfile:
-            csv_reader = csv.reader(csvfile, delimiter=',')
-            next(csv_reader)  # Skip the header
-            for row in csv_reader:
-                videoobject_subset.append(VideoObject(row[0], row[1], row[2]))
-        videoobject_subsets.append(videoobject_subset)
-    return videoobject_subsets
 
 
 def generate_frames(subsets, skip_existent=True):
@@ -149,7 +133,7 @@ def generate_frames(subsets, skip_existent=True):
     for videoobject_subset in videoobject_subsets:
 
         for video in videoobject_subset:
-            video_base = os.path.join(project_root, 'data', 'UCF-101', video.label,
+            video_base = os.path.join(project_root(), 'data', 'UCF-101', video.label,
                                       'v_' + video.label + '_' + video.group + '_' + video.clip)
             frame_folder_name = video_base + '_frames'
             video_filename = video_base + '.avi'
@@ -165,7 +149,7 @@ def generate_frames(subsets, skip_existent=True):
 
             # Generate frames
             frames_name_pattern = os.path.join(frame_folder_name, 'frame-%04d.jpg')
-            subprocess.call([ffmpeg_path, "-i", video_filename, frames_name_pattern],
+            subprocess.call([ffmpeg_path(), "-i", video_filename, frames_name_pattern],
                             stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
             progress_bar.update(1)
     progress_bar.close()
