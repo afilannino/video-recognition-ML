@@ -105,6 +105,8 @@ venv.bak/
 
 # dataset
 /cnn-feature-extractor-into-lstm/data/UCF-101
+/cnn-and-optical-flow-feature-extractor-into-lstm/data/UCF-101
 
 # IDEA IDE
 /.idea
+*/.idea
