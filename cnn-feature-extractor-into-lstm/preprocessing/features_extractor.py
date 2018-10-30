@@ -1,14 +1,12 @@
 import glob
 import os
-import random
-
 import numpy as np
 import tqdm
 
-from .frames_generator import retrieve_videoobject_subsets
-from .inceptionV3 import InceptionV3Model
+from utility.utility import retrieve_videoobject_subsets, limit_frames_size, project_root
+from preprocessing.inceptionV3 import InceptionV3Model
 
-project_root = 'INSERIRE PATH ROOT PROGETTO'
+project_root = project_root()
 
 
 def main():
@@ -60,24 +58,6 @@ def extract_features(videoobject_subsets, model, size_limit=100, skip_existent=T
             progress_bar.update(1)
 
     progress_bar.close()
-
-
-def limit_frames_size(frame_list, size_limit):
-    # Check if requirement are already satisfied
-    if len(frame_list) <= size_limit:
-        return frame_list
-
-    # Generate 'size_limit' number of random index
-    new_frame_list_index = list(range(len(frame_list)))
-    random.shuffle(new_frame_list_index)
-    new_frame_list_index = new_frame_list_index[:size_limit]
-
-    # Create new list
-    new_frame_list = []
-    for i in new_frame_list_index:
-        new_frame_list.append(frame_list[i])
-    new_frame_list.sort()
-    return new_frame_list
 
 
 if __name__ == '__main__':

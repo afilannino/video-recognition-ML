@@ -3,10 +3,10 @@ import os
 
 from keras.models import load_model
 
-from experiment.train import retrieve_classes, retrieve_sequence, create_sequence_generator
-from preprocessing.frames_generator import retrieve_videoobject_subsets
+from utility.experiment_utilities import retrieve_sequence, create_sequence_generator
+from utility.utility import retrieve_videoobject_subsets, project_root, retrieve_classes
 
-project_root = 'cnn-feature-extractor-into-lstm'
+project_root = project_root()
 feature_length = 2048  # This is the length of the numpy array that contains the prediction
 classes_size = 101  # Number of classes in UCF101 dataset
 feature_sequence_size = 100  # This must be coherent with the value used in features_extractor.py
