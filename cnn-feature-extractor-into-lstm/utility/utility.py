@@ -1,6 +1,6 @@
 import csv
 import os
-import random
+import numpy as np
 
 from utility.video_object import VideoObject
 
@@ -31,17 +31,13 @@ def retrieve_videoobject_subsets(subsets):
 def limit_frames_size(frame_list, size_limit):
     # Check if requirement are already satisfied
     if len(frame_list) <= size_limit:
+        # Fill with last frame until size is size_limit
+        for i in range(size_limit - len(frame_list)):
+            frame_list.append(frame_list[len(frame_list) - 1])
         return frame_list
 
-    # Generate 'size_limit' number of random index
-    new_frame_list_index = list(range(len(frame_list)))
-    random.shuffle(new_frame_list_index)
-    new_frame_list_index = new_frame_list_index[:size_limit]
-
-    # Create new list
-    new_frame_list = []
-    for i in new_frame_list_index:
-        new_frame_list.append(frame_list[i])
+    # Pick 'size_limit' frames from the frame list and reorder them
+    new_frame_list = np.random.choice(frame_list, size=size_limit, replace=False).tolist()
     new_frame_list.sort()
     return new_frame_list
 

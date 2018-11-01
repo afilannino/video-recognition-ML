@@ -1,5 +1,6 @@
 import os.path
 import time
+import numpy as np
 
 from keras.callbacks import ModelCheckpoint, CSVLogger
 from keras.layers import Dense, Dropout
@@ -17,10 +18,10 @@ feature_sequence_size = 100  # This must be coherent with the value used in feat
 
 
 def main():
-    preload_features_in_memory = False
+    preload_features_in_memory = True
 
     # Hyper parameters
-    batch_size = 128
+    batch_size = 32
     epoch_number = 1
 
     # Create final model and retrieve training data
@@ -71,8 +72,17 @@ def train(model, classes, train_data, validation_data, preload_features_in_memor
     validation_steps_per_epoch = int(len(validation_data) // batch_size)
 
     if preload_features_in_memory:
+        # Reading and reshaping training data
         x_train, y_train = retrieve_sequence(train_data, classes)
+        # x_train.reshape((x_train.shape[0], feature_sequence_size, feature_length))
+        # y_train.reshape(y_train.shape[0], len(classes))
+
+        # Reading and reshaping validation data
         x_validation, y_validation = retrieve_sequence(validation_data, classes)
+        # x_validation.reshape(x_validation.shape[0], feature_sequence_size, feature_length)
+        # y_validation.reshape(y_validation.shape[0], len(classes))
+
+        # Training
         model.fit(x_train, y_train,
                   validation_data=(x_validation, y_validation),
                   batch_size=batch_size,
