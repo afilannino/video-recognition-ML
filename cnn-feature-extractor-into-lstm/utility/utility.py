@@ -31,9 +31,6 @@ def retrieve_videoobject_subsets(subsets):
 def limit_frames_size(frame_list, size_limit):
     # Check if requirement are already satisfied
     if len(frame_list) <= size_limit:
-        # Fill with last frame until size is size_limit
-        for i in range(size_limit - len(frame_list)):
-            frame_list.append(frame_list[len(frame_list) - 1])
         return frame_list
 
     # Pick 'size_limit' frames from the frame list and reorder them

@@ -6,6 +6,7 @@ from utility.utility import project_root, retrieve_videoobject_subsets
 
 project_root = project_root()
 
+size_limit = 100  # This value must be coherent with the rest of experiment
 
 def main():
     #create_frames_number_csv()
@@ -33,7 +34,7 @@ def create_frames_number_csv():
                 frame_csv_writer.writerow([video_name, len(frames)])
 
 
-def evaluate_frames(size_limit=100):
+def evaluate_frames():
     n_video_under_size_limit = 0
     frame_sum = 0
     video_sum = 0
@@ -69,6 +70,9 @@ def evaluate_frames(size_limit=100):
         stat_csv_writer.writerow(['video_with_less_than_size_limit_frames', n_video_under_size_limit])
         stat_csv_writer.writerow(['missing_frames', missing_frames])
         stat_csv_writer.writerow(['average_missing_frames', missing_frames / n_video_under_size_limit])
+        # for weights computation
+        stat_csv_writer.writerow(['total_number_of_feature', missing_frames + frame_sum])
+        stat_csv_writer.writerow(['frame_weight', '{0:.15f}'.format(1/frame_sum)])
 
 
 if __name__ == '__main__':
