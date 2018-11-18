@@ -11,7 +11,42 @@ ffmpeg_path = ffmpeg_path()
 def main():
     video_list = retrieve_dataset()
     split_dataset(video_list)
+    # retrieve_official_split()
     generate_classes(video_list)
+
+
+def retrieve_official_split(split_version='01'):
+    # Official UCF101 has 3 different splitting modes
+
+    # Check paths existence
+    testfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'testlist' + split_version + '.txt')
+    trainfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'trainlist' + split_version + '.txt')
+    if not os.path.exists(testfile):
+        raise Exception('File not found: ' + testfile)
+    if not os.path.exists(trainfile):
+        raise Exception('File not found: ' + trainfile)
+
+    with open(testfile) as f1:
+        testlist = f1.readlines()
+    with open(trainfile) as f2:
+        trainlist = f2.readlines()
+
+    test_set = list(map(retrieve_videoobject_from_string, testlist))
+    train_set = list(map(retrieve_videoobject_from_string, trainlist))
+
+    # Write the subset generated into dedicated csv
+    header = ['LABEL', 'GROUP', 'CLIP']
+    with open(os.path.join(project_root, 'data', 'train-set.csv'), 'w', newline='\n') as train_csv:
+        train_csv_writer = csv.writer(train_csv, delimiter=',')
+        train_csv_writer.writerow(header)
+        for video in train_set:
+            train_csv_writer.writerow([video.label, video.group, video.clip])
+
+    with open(os.path.join(project_root, 'data', 'test-set.csv'), 'w', newline='\n') as test_csv:
+        test_csv_writer = csv.writer(test_csv, delimiter=',')
+        test_csv_writer.writerow(header)
+        for video in test_set:
+            test_csv_writer.writerow([video.label, video.group, video.clip])
 
 
 def retrieve_dataset():

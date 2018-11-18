@@ -109,6 +109,9 @@ venv.bak/
 /data/test-set.csv
 /data/validation-set.csv
 
+# Model Weights
+*.hdf5
+
 # IDEA IDE
 /.idea
 */.idea

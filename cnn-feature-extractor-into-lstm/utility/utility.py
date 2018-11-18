@@ -18,6 +18,11 @@ def retrieve_videoobject_subsets(subsets):
     # Loop over the three subsets: train, validation, test
     for subset in subsets:
         videoobject_subset = []
+
+        if not os.path.exists(os.path.join(project_root(), 'data', subset + '-set.csv')):
+            videoobject_subsets.append([])
+            continue
+
         # Open the csv file and retrieve a list of VideoObject
         with open(os.path.join(project_root(), 'data', subset + '-set.csv'), 'r', newline='\n') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=',')

@@ -47,7 +47,7 @@ def retrieve_sequence(subset, classes, feature_sequence_length, feature_length):
 def create_sequence_generator(subset, classes, batch_size, feature_sequence_length, feature_length):
     counter = 0
     # weight = retrieve_weight()
-    while True:  # This is because generator must be infinite loop in Keras
+    while True:  # This is because generator must be infinite loop
         x_batch = []
         y_batch = []
         # sample_weights_batch = []
