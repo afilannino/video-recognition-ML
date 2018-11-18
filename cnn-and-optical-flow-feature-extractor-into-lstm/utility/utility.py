@@ -1,6 +1,6 @@
 import csv
 import os
-import random
+import numpy as np
 
 from utility.video_object import VideoObject
 
@@ -10,7 +10,7 @@ def project_root():
 
 
 def ffmpeg_path():
-    return 'PATH TO ffmpeg'
+    return 'PATH TO ffmpeg bin folder'
 
 
 def retrieve_videoobject_subsets(subsets):
@@ -18,6 +18,11 @@ def retrieve_videoobject_subsets(subsets):
     # Loop over the three subsets: train, validation, test
     for subset in subsets:
         videoobject_subset = []
+
+        if not os.path.exists(os.path.join(project_root(), 'data', subset + '-set.csv')):
+            videoobject_subsets.append([])
+            continue
+
         # Open the csv file and retrieve a list of VideoObject
         with open(os.path.join(project_root(), 'data', subset + '-set.csv'), 'r', newline='\n') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=',')
@@ -33,14 +38,16 @@ def limit_frames_size(frame_list, size_limit):
     if len(frame_list) <= size_limit:
         return frame_list
 
-    # Generate 'size_limit' number of random index
-    new_frame_list_index = list(range(len(frame_list)))
-    random.shuffle(new_frame_list_index)
-    new_frame_list_index = new_frame_list_index[:size_limit]
-
-    # Create new list
-    new_frame_list = []
-    for i in new_frame_list_index:
-        new_frame_list.append(frame_list[i])
+    # Pick 'size_limit' frames from the frame list and reorder them
+    new_frame_list = np.random.choice(frame_list, size=size_limit, replace=False).tolist()
     new_frame_list.sort()
     return new_frame_list
+
+
+def retrieve_classes():
+    classes = []
+    with open(os.path.join(project_root(), 'data', 'classes.csv'), 'r', newline='\n') as csvfile:
+        csv_reader = csv.reader(csvfile, delimiter=',')
+        for row in csv_reader:
+            classes.append(row[0])
+    return classes
