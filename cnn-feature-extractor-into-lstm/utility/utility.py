@@ -33,15 +33,20 @@ def retrieve_videoobject_subsets(subsets):
     return videoobject_subsets
 
 
-def limit_frames_size(frame_list, size_limit):
+def limit_frames_number(frame_list, limit):
     # Check if requirement are already satisfied
-    if len(frame_list) <= size_limit:
+    if len(frame_list) <= limit:
         return frame_list
 
+    step = len(frame_list) / limit
+    index = map(lambda x: round(x * step), list(range(limit)))
+
     # Pick 'size_limit' frames from the frame list and reorder them
-    new_frame_list = np.random.choice(frame_list, size=size_limit, replace=False).tolist()
+    # new_frame_list = np.random.choice(frame_list, size=limit, replace=False).tolist()
+    # new_frame_list = frame_list[::step]
+    new_frame_list = [frame_list[i] for i in index]
     new_frame_list.sort()
-    return new_frame_list
+    return new_frame_list[:limit]
 
 
 def retrieve_classes():

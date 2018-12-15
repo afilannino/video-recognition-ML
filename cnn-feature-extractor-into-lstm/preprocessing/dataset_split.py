@@ -7,20 +7,22 @@ from utility.utility import project_root, ffmpeg_path
 project_root = project_root()
 ffmpeg_path = ffmpeg_path()
 
+# Official UCF101 has 3 different splitting modes
+split_version = '01'  # Possible values are 01, 02 or 03
+
 
 def main():
     video_list = retrieve_dataset()
-    split_dataset(video_list)
-    # retrieve_official_split()
+    # split_dataset(video_list)
+    retrieve_official_split(split=split_version)
     generate_classes(video_list)
 
 
-def retrieve_official_split(split_version='01'):
-    # Official UCF101 has 3 different splitting modes
+def retrieve_official_split(split='01'):
 
     # Check paths existence
-    testfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'testlist' + split_version + '.txt')
-    trainfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'trainlist' + split_version + '.txt')
+    testfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'testlist' + split + '.txt')
+    trainfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'trainlist' + split + '.txt')
     if not os.path.exists(testfile):
         raise Exception('File not found: ' + testfile)
     if not os.path.exists(trainfile):
@@ -42,17 +44,14 @@ def retrieve_official_split(split_version='01'):
         for video in train_set:
             train_csv_writer.writerow([video.label, video.group, video.clip])
 
-    with open(os.path.join(project_root, 'data', 'test-set.csv'), 'w', newline='\n') as test_csv:
-        test_csv_writer = csv.writer(test_csv, delimiter=',')
-        test_csv_writer.writerow(header)
+    with open(os.path.join(project_root, 'data', 'validation-set.csv'), 'w', newline='\n') as validation_csv:
+        validation_csv_writer = csv.writer(validation_csv, delimiter=',')
+        validation_csv_writer.writerow(header)
         for video in test_set:
-            test_csv_writer.writerow([video.label, video.group, video.clip])
+            validation_csv_writer.writerow([video.label, video.group, video.clip])
 
 
 def retrieve_dataset():
-    # Official UCF101 has 3 different splitting modes
-    split_version = '01'  # Possible values are 01, 02 or 03
-
     # Check paths existence
     testfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'testlist' + split_version + '.txt')
     trainfile = os.path.join(project_root, 'data', 'ucfTrainTestlist', 'trainlist' + split_version + '.txt')
@@ -76,7 +75,7 @@ def retrieve_dataset():
     return list(map(retrieve_videoobject_from_string, datalist))
 
 
-# Create a function that retrive VideoObject from a string
+# Function that retrieve VideoObject from a string
 def retrieve_videoobject_from_string(entry_string):
     splits = entry_string.split('_')
     return VideoObject(splits[1], splits[2], splits[3][:3])
