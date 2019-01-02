@@ -9,10 +9,10 @@ from utility.utility import retrieve_videoobject_subsets, limit_frames_size, pro
 
 
 def main():
-    generate_flow_frames(['train', 'validation', 'test'])
+    generate_flow_frames(['train', 'validation'], sequence_length=31)
 
 
-def generate_flow_frames(subsets, sequence_length=101, skip_existent=False):
+def generate_flow_frames(subsets, sequence_length=31, skip_existent=False):
     # Retrieve video's subsets
     videoobject_subsets = retrieve_videoobject_subsets(subsets)
 

@@ -106,8 +106,20 @@ venv.bak/
 # dataset
 /lstm-with-cnn-features-only-rgb/data/UCF-101
 /lstm-with-cnn-features-rgb-and-opticalflow/data/UCF-101
-*.avi
+
+# log files
+/lstm-with-cnn-features-only-rgb/data/result/logs
+/lstm-with-cnn-features-rgb-and-opticalflow/data/result/logs
 
 # IDEA IDE
 /.idea
 */.idea
+
+# other
+*/toignore/*
+*.png
+*.hdf5
+*.npy
+*.avi
+*.jpg
+*.log

@@ -9,7 +9,7 @@ ffmpeg_path = ffmpeg_path()
 
 
 def main():
-    generate_frames(['train', 'validation', 'test'])
+    generate_frames(['train', 'validation'])
 
 
 def generate_frames(subsets, skip_existent=True):

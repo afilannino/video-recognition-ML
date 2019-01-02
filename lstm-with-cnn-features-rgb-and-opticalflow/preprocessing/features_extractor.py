@@ -3,20 +3,20 @@ import os
 import numpy as np
 import tqdm
 
-from utility.utility import retrieve_videoobject_subsets, limit_frames_size, project_root
+from utility.utility import retrieve_videoobject_subsets, limit_frames_number, project_root
 from preprocessing.inceptionV3 import InceptionV3Model
 
 project_root = project_root()
 
 
 def main():
-    videoobject_subsets = retrieve_videoobject_subsets(['train', 'validation', 'test'])
+    videoobject_subsets = retrieve_videoobject_subsets(['validation', 'train'])
     model = InceptionV3Model()
-    extract_features(videoobject_subsets, model, size_limit=100)
-    extract_features(videoobject_subsets, model, size_limit=100, flow_feature=True)
+    extract_features(videoobject_subsets, model, size_limit=30, flow_feature=False)
+    extract_features(videoobject_subsets, model, size_limit=30, flow_feature=True)
 
 
-def extract_features(videoobject_subsets, model, size_limit=100, skip_existent=True, flow_feature=False):
+def extract_features(videoobject_subsets, model, size_limit=30, skip_existent=True, flow_feature=False):
     # Initializing progress bar
     length = 0
     for videoobject_subset in videoobject_subsets:
@@ -56,7 +56,7 @@ def extract_features(videoobject_subsets, model, size_limit=100, skip_existent=T
             else:
                 frames = glob.glob(os.path.join(frame_folder_name, 'frame-*.jpg'))
 
-            frames = limit_frames_size(frames, size_limit)
+            frames = limit_frames_number(frames, size_limit)
 
             # Loop over all frames, extract features and concatenate in a list
             features_sequence = []
