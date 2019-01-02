@@ -6,7 +6,7 @@ from utility.video_object import VideoObject
 
 
 def project_root():
-    return 'PATH TO cnn-feature-extractor-into-lstm'
+    return 'PATH TO lstm-with-cnn-features-only-rgb folder'
 
 
 def ffmpeg_path():

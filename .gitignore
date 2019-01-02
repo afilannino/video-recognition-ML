@@ -104,8 +104,9 @@ venv.bak/
 .mypy_cache/
 
 # dataset
-/cnn-feature-extractor-into-lstm/data/UCF-101
-/cnn-and-optical-flow-feature-extractor-into-lstm/data/UCF-101
+/lstm-with-cnn-features-only-rgb/data/UCF-101
+/lstm-with-cnn-features-rgb-and-opticalflow/data/UCF-101
+*.avi
 
 # IDEA IDE
 /.idea
