@@ -9,15 +9,17 @@ from utility.utility import project_root
 project_root = project_root()
 
 
-def retrieve_sequence(subset, classes, feature_sequence_length, feature_length):
+def retrieve_sequence(subset, classes, feature_sequence_length, feature_length, flow_features=False):
     x_subset = []
     y_subset = []
 
-    # weights_subset = []
-    # weight = retrieve_weight()
+    if flow_features:
+        folder_suffix = '_flowfeatures'
+    else:
+        folder_suffix = '_features'
 
     for video in subset:
-        features_folder_name = os.path.join(project_root, 'data', 'UCF-101', video.label, video.label + '_features')
+        features_folder_name = os.path.join(project_root, 'data', 'UCF-101', video.label, video.label + folder_suffix)
         feature_filename = os.path.join(features_folder_name,
                                         'v_' + video.label + '_' + video.group + '_' + video.clip + '.npy')
         if os.path.isfile(feature_filename):
@@ -33,24 +35,22 @@ def retrieve_sequence(subset, classes, feature_sequence_length, feature_length):
         else:
             raise Exception('Feature not found! You have to create all the features!')
 
-        # sample_weights = np.zeros(feature_sequence_length)
-        # for i in range(length):
-        #     sample_weights[i] = weight
-
         x_subset.append(features_sequence)
         y_subset.append(to_categorical(classes.index(video.label), len(classes)))
-        # weights_subset.append(sample_weights)
 
-    return np.array(x_subset), np.array(y_subset) # , np.reshape(weights_subset, (len(subset), feature_sequence_length))
+    return np.array(x_subset), np.array(y_subset)
 
 
-def create_sequence_generator(subset, classes, batch_size, feature_sequence_length, feature_length):
+def create_sequence_generator(subset, classes, batch_size, feature_sequence_length, feature_length, flow_features=False):
     counter = 0
-    # weight = retrieve_weight()
+    if flow_features:
+        folder_suffix = '_flowfeatures'
+    else:
+        folder_suffix = '_features'
+
     while True:  # This is because generator must be infinite loop
         x_batch = []
         y_batch = []
-        # sample_weights_batch = []
         current_batch = []
 
         if counter + batch_size <= len(subset):
@@ -70,7 +70,7 @@ def create_sequence_generator(subset, classes, batch_size, feature_sequence_leng
             counter = 0
 
         for video in current_batch:
-            feature_filename = os.path.join(project_root, 'data', 'UCF-101', video.label, video.label + '_features',
+            feature_filename = os.path.join(project_root, 'data', 'UCF-101', video.label, video.label + folder_suffix,
                                             'v_' + video.label + '_' + video.group + '_' + video.clip + '.npy')
             if os.path.isfile(feature_filename):
                 features_sequence = np.load(feature_filename)
@@ -86,16 +86,10 @@ def create_sequence_generator(subset, classes, batch_size, feature_sequence_leng
             else:
                 raise Exception('Feature not found! You have to create all the features!')
 
-            # sample_weights = np.zeros(feature_sequence_length)
-            # for i in range(length):
-            #     sample_weights[i] = weight
-
             x_batch.append(features_sequence)
             y_batch.append(to_categorical(classes.index(video.label), len(classes)))
-            # sample_weights_batch.append(sample_weights)
 
-        yield np.array(x_batch), np.array(y_batch)  # , np.array(sample_weights_batch)
-        # print(len(current_batch))
+        yield np.array(x_batch), np.array(y_batch)
 
 
 def retrieve_weight():

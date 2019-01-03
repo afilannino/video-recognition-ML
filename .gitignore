@@ -111,9 +111,10 @@ venv.bak/
 /lstm-with-cnn-features-only-rgb/data/result/logs
 /lstm-with-cnn-features-rgb-and-opticalflow/data/result/logs
 
-# IDEA IDE
+# IDE and editor
 /.idea
 */.idea
+.vscode
 
 # other
 */toignore/*
