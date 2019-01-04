@@ -12,10 +12,10 @@ project_root = project_root()
 def main():
     videoobject_subsets = retrieve_videoobject_subsets(['validation', 'train'])
     model = InceptionV3Model()
-    extract_features(videoobject_subsets, model, size_limit=30, skip_existent=False)
+    extract_features(videoobject_subsets, model, size_limit=20, skip_existent=False)
 
 
-def extract_features(videoobject_subsets, model, size_limit=100, skip_existent=True):
+def extract_features(videoobject_subsets, model, size_limit=30, skip_existent=True):
     # Initializing progress bar
     length = 0
     for videoobject_subset in videoobject_subsets:
