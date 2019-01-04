@@ -8,7 +8,7 @@ project_root = project_root()
 save_pic = True
 
 
-def main(log_file_to_plot='training-1541372600.5267973.log'):
+def main(log_file_to_plot='your_log_file'):
     print('Utility function')
     epoch, acc, loss, topk = retrieve_plot_data(log_file_to_plot, 'train')
     epoch, val_acc, val_loss, val_topk = retrieve_plot_data(log_file_to_plot, 'validation')

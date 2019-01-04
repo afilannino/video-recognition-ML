@@ -82,15 +82,11 @@ def train(model, classes, train_data, validation_data, preload_features_in_memor
     es = EarlyStopping(patience=5)
 
     if preload_features_in_memory:
-        # Reading and reshaping training data
+        # Reading training data
         x_train, y_train = retrieve_sequence(train_data, classes, feature_sequence_size, feature_length)
-        # x_train = np.reshape(x_train, (x_train.shape[0], feature_sequence_size, feature_length))
-        # y_train = np.reshape(y_train, (y_train.shape[0], len(classes))
 
-        # Reading and reshaping validation data
+        # Reading validation data
         x_validation, y_validation = retrieve_sequence(validation_data, classes, feature_sequence_size, feature_length)
-        # x_validation = np.reshape(x_validation, (x_validation.shape[0], feature_sequence_size, feature_length))
-        # y_validation = np.reshape(y_validation, (y_validation.shape[0], len(classes))
 
         # Training
         model.fit(x_train, y_train,
