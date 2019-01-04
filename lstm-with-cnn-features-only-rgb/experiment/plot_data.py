@@ -21,7 +21,7 @@ def main(log_file_to_plot='training-1541372600.5267973.log'):
 def retrieve_plot_data(filelog_name, phase):
     log_path = os.path.join(project_root, 'data', 'result', 'logs', filelog_name)
     if not os.path.exists(log_path):
-        print('Log file not found!')
+        raise Exception('Log file not found!')
 
     log_data = pd.read_csv(log_path, delimiter=',')
     epoch = log_data.epoch.tolist()
@@ -52,7 +52,7 @@ def create_plot(epoch, train_values, validation_values=None, metric='Metric'):
     ax.set(xlabel='Epoch', ylabel=metric, title=metric + ' over epochs')
     ax.grid()
     ax.legend()
-    plt.show()
+    # plt.show()
 
     if save_pic:
         save_path = os.path.join(project_root, 'data', 'result')
