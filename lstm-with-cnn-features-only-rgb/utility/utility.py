@@ -6,13 +6,11 @@ from utility.video_object import VideoObject
 
 
 def project_root():
-    return 'D:\\GIT_repository\\video-recognition-ML\\lstm-with-cnn-features-only-rgb'
-    # return 'PATH TO lstm-with-cnn-features-only-rgb folder'
+    return 'PATH TO lstm-with-cnn-features-only-rgb folder'
 
 
 def ffmpeg_path():
-    return 'D:\\Programmi\\ffmpeg\\ffmpeg-20180919-49c67e7-win64-static\\bin\\ffmpeg.exe'
-    # return 'PATH TO ffmpeg bin folder'
+    return 'PATH TO ffmpeg'
 
 
 def retrieve_videoobject_subsets(subsets):
