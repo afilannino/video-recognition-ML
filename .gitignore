@@ -106,10 +106,12 @@ venv.bak/
 # dataset
 /lstm-with-cnn-features-only-rgb/data/UCF-101
 /lstm-with-cnn-features-rgb-and-opticalflow/data/UCF-101
+/lstm-with-trained-cnn-and-tsn/data/UCF-101
 
 # log files
 /lstm-with-cnn-features-only-rgb/data/result/logs
 /lstm-with-cnn-features-rgb-and-opticalflow/data/result/logs
+/lstm-with-trained-cnn-and-tsn/data/result/logs
 
 # IDE and editor
 /.idea
