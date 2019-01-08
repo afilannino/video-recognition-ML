@@ -33,11 +33,11 @@ def extract_features(videoobject_subsets, model, size_limit=30, skip_existent=Tr
             if flow_feature:
                 frame_folder_name = video_base + '_flowframes'
                 features_folder_name = os.path.join(project_root, 'data', 'UCF-101', video.label,
-                                                    video.label + '_features')
+                                                    video.label + '_flowfeatures')
             else:
                 frame_folder_name = video_base + '_frames'
                 features_folder_name = os.path.join(project_root, 'data', 'UCF-101', video.label,
-                                                    video.label + '_flowfeatures')
+                                                    video.label + '_features')
 
             feature_filename = os.path.join(features_folder_name,
                                             'v_' + video.label + '_' + video.group + '_' + video.clip)
