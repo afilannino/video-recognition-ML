@@ -16,11 +16,11 @@ from experiment.plot_data import main as create_plot
 project_root = project_root()
 feature_length = 2048  # This is the length of the numpy array that contains the prediction
 classes_size = len(retrieve_classes())  # Number of classes in UCF101 dataset
-feature_sequence_size = 30  # This must be coherent with the value used in features_extractor.py
+feature_sequence_size = 20  # This must be coherent with the value used in features_extractor.py
 
 
 def main():
-    preload_features_in_memory = True
+    preload_features_in_memory = False
 
     # Hyper parameters
     batch_size = 64
@@ -113,24 +113,21 @@ def train(model, classes, train_data, validation_data, preload_features_in_memor
                   batch_size=batch_size,
                   epochs=epoch_number,
                   verbose=1,
-                  callbacks=[model_saver, csv_logger, tb, es])
+                  callbacks=[model_saver, csv_logger, es])
     else:
         train_steps_per_epoch = math.ceil(len(train_data) / batch_size)
         validation_steps_per_epoch = math.ceil(len(validation_data) / batch_size)
 
-        rgb_train_sequence_generator = create_sequence_generator(train_data, classes, batch_size, feature_sequence_size, feature_length, flow_features=False)
-        rgb_validation_sequence_generator = create_sequence_generator(validation_data, classes, batch_size, feature_sequence_size, feature_length, flow_features=False)
+        train_sequence_generator = create_sequence_generator(train_data, classes, batch_size, feature_sequence_size, feature_length)
+        validation_sequence_generator = create_sequence_generator(validation_data, classes, batch_size, feature_sequence_size, feature_length)
 
-        flow_train_sequence_generator = create_sequence_generator(train_data, classes, batch_size, feature_sequence_size, feature_length, flow_features=True)
-        flow_validation_sequence_generator = create_sequence_generator(validation_data, classes, batch_size, feature_sequence_size, feature_length, flow_features=True)
-
-        model.fit_generator(generator=[rgb_train_sequence_generator, flow_train_sequence_generator],
+        model.fit_generator(generator=train_sequence_generator,
                             steps_per_epoch=train_steps_per_epoch,
-                            validation_data=[rgb_validation_sequence_generator, flow_validation_sequence_generator],
+                            validation_data=validation_sequence_generator,
                             validation_steps=validation_steps_per_epoch,
                             epochs=epoch_number,
                             verbose=1,
-                            callbacks=[model_saver, csv_logger, tb, es])
+                            callbacks=[model_saver, csv_logger, es])
 
     create_plot(filelog_name)
     print('Model trained!')
