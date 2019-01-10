@@ -15,7 +15,7 @@ from experiment.plot_data import main as create_plot
 project_root = project_root()
 feature_length = 2048  # This is the length of the numpy array that contains the prediction
 classes_size = len(retrieve_classes())  # Number of classes in UCF101 dataset
-feature_sequence_size = 30  # This must be coherent with the value used in features_extractor.py
+feature_sequence_size = 20  # This must be coherent with the value used in features_extractor.py
 
 
 def main():
