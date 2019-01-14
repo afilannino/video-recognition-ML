@@ -3,7 +3,7 @@ import time
 import math
 
 from keras.callbacks import ModelCheckpoint, CSVLogger, TensorBoard, EarlyStopping
-from keras.layers import Dense, Dropout, concatenate, Input
+from keras.layers import Dense, Dropout, average, Input
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential, Model
 from keras.optimizers import Adam
@@ -44,19 +44,21 @@ def create_final_model(model_weights=False, weights_path=None):
     input_shape = (feature_sequence_size, feature_length)
 
     rgb_input = Input(shape=input_shape, name='rgb_input')
-    rgb_lstm = LSTM(1024, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
+    rgb_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
     rgb_dense1 = Dense(512, name='rgb_dense1')(rgb_lstm)
     rgb_dropout = Dropout(0.5, name='rgb_dropout')(rgb_dense1)
+    rgb_dense2 = Dense(classes_size, activation='softmax', name='rgb_dense2')(rgb_dropout)
 
     flow_input = Input(shape=input_shape, name='flow_input')
     flow_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='flow_lstm')(flow_input)
     flow_dense1 = Dense(512, name='flow_dense1')(flow_lstm)
     flow_dropout = Dropout(0.5, name='flow_dropout')(flow_dense1)
+    flow_dense2 = Dense(classes_size, activation='softmax', name='flow_dense2')(flow_dropout)
 
-    merge1 = concatenate([rgb_dropout, flow_dropout])
-    merge1_dense = Dense(classes_size, activation='softmax', name='merge1_dense')(merge1)
+    avg = average([rgb_dense2, flow_dense2])
+    final_dense = Dense(classes_size, activation='softmax', name='final_dense')(avg)
 
-    model = Model(inputs=[rgb_input, flow_input], outputs=merge1_dense)
+    model = Model(inputs=[rgb_input, flow_input], outputs=final_dense)
 
     # Hyper parameters
     loss = 'categorical_crossentropy'
@@ -113,7 +115,7 @@ def train(model, classes, train_data, validation_data, preload_features_in_memor
                   batch_size=batch_size,
                   epochs=epoch_number,
                   verbose=1,
-                  callbacks=[model_saver, csv_logger, es])
+                  callbacks=[model_saver, csv_logger, es, tb])
     else:
         train_steps_per_epoch = math.ceil(len(train_data) / batch_size)
         validation_steps_per_epoch = math.ceil(len(validation_data) / batch_size)
@@ -127,7 +129,7 @@ def train(model, classes, train_data, validation_data, preload_features_in_memor
                             validation_steps=validation_steps_per_epoch,
                             epochs=epoch_number,
                             verbose=1,
-                            callbacks=[model_saver, csv_logger, es])
+                            callbacks=[model_saver, csv_logger, es, tb])
 
     create_plot(filelog_name)
     print('Model trained!')
