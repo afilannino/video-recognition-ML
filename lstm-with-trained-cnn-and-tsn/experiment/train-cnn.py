@@ -13,6 +13,7 @@ from utility.utility import retrieve_classes, project_root
 project_root = project_root()
 classes = retrieve_classes()
 batch_size = 64
+epochs=200
 
 
 def main():
@@ -67,7 +68,7 @@ def main():
         steps_per_epoch=train_generator.samples // batch_size,
         validation_data=validation_generator,
         validation_steps=validation_generator.samples // batch_size,
-        epochs=200,
+        epochs=epochs,
         callbacks=[model_saver, csv_logger]
     )
     create_plot(filelog_name)
