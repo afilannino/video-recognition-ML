@@ -108,6 +108,7 @@ venv.bak/
 /lstm-with-cnn-features-rgb-and-opticalflow/data/UCF-101
 /lstm-with-trained-cnn-and-tsn/data/UCF-101
 /lstm-with-trained-cnn-and-tsn/data/UCF-101-cnn-frames
+/lstm-with-trained-cnn-and-tsn/data/UCF-101-cnn-flowframes
 
 # log files
 /lstm-with-cnn-features-only-rgb/data/result/logs
