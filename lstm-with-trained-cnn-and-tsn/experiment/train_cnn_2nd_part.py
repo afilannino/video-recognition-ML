@@ -54,6 +54,8 @@ def main():
     # Callback: EarlyStopping
     es = EarlyStopping(patience=5)
 
+    train_generator, validation_generator = create_data_generator()
+
     model.fit_generator(
         train_generator,
         steps_per_epoch=train_generator.samples // batch_size,
