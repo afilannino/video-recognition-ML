@@ -61,11 +61,11 @@ def generate_and_store_features(videoobject_subsets, model, skip_existent=True, 
                                       'v_' + video.label + '_' + video.group + '_' + video.clip)
             if flow_feature:
                 frame_folder_name = video_base + '_flowframes'
-                features_folder_name = os.path.join(project_root, 'data', 'UCF-101', video.label,
+                features_folder_name = os.path.join(project_root, 'data', 'UCF-101-flow-features', video.label,
                                                     video.label + '_flowfeatures')
             else:
                 frame_folder_name = video_base + '_frames'
-                features_folder_name = os.path.join(project_root, 'data', 'UCF-101', video.label,
+                features_folder_name = os.path.join(project_root, 'data', 'UCF-101-rgb-features', video.label,
                                                     video.label + '_features')
 
             feature_filename = os.path.join(features_folder_name,
