@@ -25,7 +25,7 @@ def main():
 
 
 def create_trained_inceptionv3_model():
-    model_weights = os.path.join(project_root, 'data', 'result', 'model_weights',
+    model_weights = os.path.join(project_root, 'data', 'result_trainCNN_final', 'model_weights',
                                  'cnn-training-010-6.011.hdf5')
 
     base_model = InceptionV3(weights='imagenet', include_top=False)
