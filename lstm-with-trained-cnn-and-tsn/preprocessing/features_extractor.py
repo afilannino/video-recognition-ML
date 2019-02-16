@@ -41,7 +41,7 @@ def create_trained_inceptionv3_model():
     else:
         raise Exception('No model weights found!')
 
-    trained_model = Model(input=model.input, output=model.get_layer('avg_pool').output)
+    trained_model = Model(input=model.input, output=model.get_layer('final_avg_pool').output)
     return trained_model
 
 
