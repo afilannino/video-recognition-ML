@@ -21,7 +21,7 @@ def main():
     videoobject_subsets = retrieve_videoobject_subsets(['train', 'validation'])
     model = create_trained_inceptionv3_model()
     generate_and_store_features(videoobject_subsets, model, flow_feature=False)
-    generate_and_store_features(videoobject_subsets, model, flow_feature=True)
+    # generate_and_store_features(videoobject_subsets, model, flow_feature=True)
 
 
 def create_trained_inceptionv3_model():
