@@ -26,7 +26,7 @@ def main():
 
 def create_trained_inceptionv3_model():
     model_weights = os.path.join(project_root, 'data', 'result', 'model_weights',
-                                 'cnn-training-{epoch:03d}-{val_loss:.3f}.hdf5')
+                                 'cnn-training-010-6.011.hdf5')
 
     base_model = InceptionV3(weights='imagenet', include_top=False)
     x = base_model.output
@@ -57,7 +57,7 @@ def generate_and_store_features(videoobject_subsets, model, skip_existent=True, 
     for videoobject_subset in videoobject_subsets:
 
         for video in videoobject_subset:
-            video_base = os.path.join(project_root,'..' , 'lstm-with-cnn-features-rgb-and-opticalflow', 'data', 'UCF-101', video.label,
+            video_base = os.path.join(project_root, 'data', 'UCF-101', video.label,
                                       'v_' + video.label + '_' + video.group + '_' + video.clip)
             if flow_feature:
                 frame_folder_name = video_base + '_flowframes'
