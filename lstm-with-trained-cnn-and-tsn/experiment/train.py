@@ -23,7 +23,7 @@ number_of_segment = 3
 
 def main():
     # Hyper parameters
-    batch_size = 64
+    batch_size = 66
     epoch_number = 200
 
     # Create final model and retrieve training data
@@ -72,8 +72,8 @@ def create_partial_models():
     optimizer = Adam(lr=1e-5, decay=1e-6)
     metrics = ['accuracy', 'top_k_categorical_accuracy']
 
-    plot_model(model_rgb, to_file='model.png', show_shapes=True)
-    plot_model(model_flow, to_file='model.png', show_shapes=True)
+    plot_model(model_rgb, to_file='model_partial_rgb.png', show_shapes=True)
+    plot_model(model_flow, to_file='model_partial_flow.png', show_shapes=True)
 
     # Model created
     model_rgb.compile(loss=loss, optimizer=optimizer, metrics=metrics)
