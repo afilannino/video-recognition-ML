@@ -3,11 +3,12 @@ import time
 import math
 
 from keras.callbacks import ModelCheckpoint, CSVLogger, TensorBoard, EarlyStopping
-from keras.layers import Dense, Dropout, Input, Average, average
+from keras.layers import Dense, Dropout, Input, Average, average, Lambda
 from keras.layers.recurrent import LSTM
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.utils import plot_model
+import keras.backend as K
 
 from utility.utility import retrieve_videoobject_subsets, project_root, retrieve_classes
 from utility.experiment_utilities import create_sequence_generator, create_sequence_of_tuple_generator
@@ -134,13 +135,15 @@ def create_final_model():
 
     consensus_dense_output = 256
 
+    # avg = Lambda(lambda xin: K.sum(xin, axis=1), output_shape=(None, 10))
+
     rgb_consensus_input = Input(shape=input_shape, name='rgb_consensus_input')
-    rgb_consensus_avg = average([rgb_consensus_input], name='rgb_consensus_avg')
-    rgb_consensus_dense = Dense(consensus_dense_output, name='rgb_consensus_dense')(rgb_consensus_avg)
+    # rgb_consensus_avg = average(rgb_consensus_input[0], name='rgb_consensus_avg')
+    rgb_consensus_dense = Dense(consensus_dense_output, name='rgb_consensus_dense')(rgb_consensus_input)
 
     flow_consensus_input = Input(shape=input_shape, name='flow_consensus_input')
-    flow_consensus_avg = average([flow_consensus_input], name='flow_consensus_avg')
-    flow_consensus_dense = Dense(consensus_dense_output, name='flow_consensus_dense')(flow_consensus_avg)
+    # flow_consensus_avg = average(flow_consensus_input, name='flow_consensus_avg')
+    flow_consensus_dense = Dense(consensus_dense_output, name='flow_consensus_dense')(flow_consensus_input)
 
     final_avg = average([rgb_consensus_dense, flow_consensus_dense])
     final_dense = Dense(classes_size, activation='softmax', name='final_dense')(final_avg)
@@ -150,7 +153,7 @@ def create_final_model():
     # Hyper parameters
     loss = 'categorical_crossentropy'
     optimizer = Adam(lr=1e-5, decay=1e-6)
-    metrics = ['accuracy', 'top_k_categorical_accuracy']
+    metrics = ['accuracy']
 
     # Model created
     model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
