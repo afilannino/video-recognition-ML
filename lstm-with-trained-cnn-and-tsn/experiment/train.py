@@ -57,12 +57,14 @@ def create_partial_models():
     rgb_dense1 = Dense(512, name='rgb_dense1')(rgb_lstm)
     rgb_dropout = Dropout(0.5, name='rgb_dropout')(rgb_dense1)
     rgb_dense2 = Dense(final_layer_ouput_length, name='rgb_dense2')(rgb_dropout)
+    rgb_dense_final = Dense(classes_size, activation='softmax', name='rgb_dense_final')(rgb_dense2)
 
     flow_input = Input(shape=input_shape, name='flow_input')
     flow_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='flow_lstm')(flow_input)
     flow_dense1 = Dense(512, name='flow_dense1')(flow_lstm)
     flow_dropout = Dropout(0.5, name='flow_dropout')(flow_dense1)
     flow_dense2 = Dense(final_layer_ouput_length, name='flow_dense2')(flow_dropout)
+    flow_dense_final = Dense(classes_size, activation='softmax', name='flow_dense_final')(flow_dense2)
 
     model_rgb = Model(inputs=rgb_input, outputs=rgb_dense2)
     model_flow = Model(inputs=flow_input, outputs=flow_dense2)

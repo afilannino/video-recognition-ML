@@ -78,7 +78,7 @@ def create_sequence_generator(
 
 
 def create_sequence_of_tuple_generator(
-        subset, batch_size, feature_sequence_length, feature_length, model, flow_feature, number_of_segment):
+        subset, batch_size, feature_sequence_length, feature_length, model_flow, model_rgb, flow_feature, number_of_segment):
 
     classes = retrieve_classes()
     counter = 0
@@ -91,6 +91,8 @@ def create_sequence_of_tuple_generator(
         dataset_folder_name = 'UCF-101-rgb-features'
 
     while True:  # This is because generator must be infinite loop
+        x_batch_rgb = []
+        x_batch_flow = []
         x_batch = []
         y_batch = []
         current_batch = []
@@ -121,7 +123,8 @@ def create_sequence_of_tuple_generator(
             if len(segment_features_list) != number_of_segment:
                 raise Exception('A video has a wrong number of feature part. Please check your parameters')
 
-            predictions_list = []
+            predictions_list_rgb = []
+            predictions_list_flow = []
             for segment_feature in segment_features_list:
 
                 if not os.path.isfile(segment_feature):
@@ -139,10 +142,14 @@ def create_sequence_of_tuple_generator(
                                                            dtype='float32'))
                     features_sequence = features_sequence.reshape((feature_sequence_length, feature_length))
 
-                prediction = model.predict(features_sequence, batch_size=1, verbose=1)
-                predictions_list.append(prediction)
+                prediction_rgb = model_rgb.predict(features_sequence, batch_size=1, verbose=1)
+                prediction_flow = model_flow.predict(features_sequence, batch_size=1, verbose=1)
+                predictions_list_rgb.append(prediction_rgb)
+                predictions_list_flow.append(prediction_flow)
 
-            x_batch.append(predictions_list)
+            x_batch_rgb.append(predictions_list_rgb)
+            x_batch_flow.append(predictions_list_flow)
             y_batch.append(to_categorical(classes.index(video.label), len(classes)))
-
+            
+        x_batch.append([x_batch_rgb, x_batch_flow])
         yield np.array(x_batch), np.array(y_batch)
