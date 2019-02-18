@@ -186,5 +186,4 @@ def create_sequence_of_tuple_generator(
             x_batch_flow.append(predictions_list_flow)
             y_batch.append(to_categorical(classes.index(video.label), len(classes)))
 
-        x_batch.append([x_batch_rgb, x_batch_flow])
-        yield np.array(x_batch), np.array(y_batch)
+        yield [np.array(x_batch_rgb), np.array(x_batch_flow)], np.array(y_batch)
