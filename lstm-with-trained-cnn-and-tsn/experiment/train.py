@@ -50,7 +50,7 @@ def main():
 
 def create_partial_models():
 
-    input_shape = (feature_sequence_size // 3, feature_length)
+    input_shape = (feature_sequence_size // number_of_segment, feature_length)
 
     rgb_input = Input(shape=input_shape, name='rgb_input')
     rgb_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
@@ -134,9 +134,9 @@ def create_final_model():
     rgb_consensus_avg = average(rgb_consensus_input, name='rgb_consensus_avg')
     rgb_consensus_dense = Dense(consensus_dense_output, name='rgb_consensus_dense')(rgb_consensus_avg)
 
-    flow_consensus_input = Input(shape=input_shape, name='rgb_consensus_input')
-    flow_consensus_avg = average(flow_consensus_input, name='rgb_consensus_avg')
-    flow_consensus_dense = Dense(consensus_dense_output, name='rgb_consensus_dense')(flow_consensus_avg)
+    flow_consensus_input = Input(shape=input_shape, name='flow_consensus_input')
+    flow_consensus_avg = average(flow_consensus_input, name='flow_consensus_avg')
+    flow_consensus_dense = Dense(consensus_dense_output, name='flow_consensus_dense')(flow_consensus_avg)
 
     final_avg = average([rgb_consensus_dense, flow_consensus_dense])
     final_dense = Dense(classes_size, activation='softmax', name='final_dense')(final_avg)
