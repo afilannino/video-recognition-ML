@@ -66,8 +66,8 @@ def create_partial_models():
     flow_dense2 = Dense(final_layer_ouput_length, name='flow_dense2')(flow_dropout)
     flow_dense_final = Dense(classes_size, activation='softmax', name='flow_dense_final')(flow_dense2)
 
-    model_rgb = Model(inputs=rgb_input, outputs=rgb_dense2)
-    model_flow = Model(inputs=flow_input, outputs=flow_dense2)
+    model_rgb = Model(inputs=rgb_input, outputs=rgb_dense_final)
+    model_flow = Model(inputs=flow_input, outputs=flow_dense_final)
 
     # Hyper parameters
     loss = 'categorical_crossentropy'
