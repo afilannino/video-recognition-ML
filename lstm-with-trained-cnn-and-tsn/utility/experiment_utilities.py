@@ -18,8 +18,10 @@ def create_sequence_generator(
 
     if flow_feature:
         folder_suffix = '_flowfeatures'
+        dataset_folder_name = 'UCF-101-flow-features'
     else:
         folder_suffix = '_features'
+        dataset_folder_name = 'UCF-101-rgb-features'
 
     while True:  # This is because generator must be infinite loop
         x_batch = []
@@ -43,7 +45,7 @@ def create_sequence_generator(
             counter = 0
 
         for video in current_batch:
-            feature_filename_pattern = os.path.join(project_root, 'data', 'UCF-101',
+            feature_filename_pattern = os.path.join(project_root, 'data', dataset_folder_name,
                                                     video.label, video.label + folder_suffix,
                                                     'v_' + video.label + '_' + video.group + '_' + video.clip + '*.npy')
 
@@ -83,8 +85,10 @@ def create_sequence_of_tuple_generator(
 
     if flow_feature:
         folder_suffix = '_flowfeatures'
+        dataset_folder_name = 'UCF-101-flow-features'
     else:
         folder_suffix = '_features'
+        dataset_folder_name = 'UCF-101-rgb-features'
 
     while True:  # This is because generator must be infinite loop
         x_batch = []
@@ -109,7 +113,7 @@ def create_sequence_of_tuple_generator(
 
         for video in current_batch:
             feature_filename_pattern = os.path.join(project_root, 'data',
-                                                    'UCF-101', video.label, video.label + folder_suffix,
+                                                    dataset_folder_name, video.label, video.label + folder_suffix,
                                                     'v_' + video.label + '_' + video.group + '_' + video.clip + '*.npy')
 
             segment_features_list = glob.glob(feature_filename_pattern)
