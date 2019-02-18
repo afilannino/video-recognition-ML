@@ -50,7 +50,7 @@ def main():
 
 def create_partial_models():
 
-    input_shape = (feature_sequence_size // number_of_segment, feature_length)
+    input_shape = (feature_sequence_size, feature_length)
 
     rgb_input = Input(shape=input_shape, name='rgb_input')
     rgb_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
