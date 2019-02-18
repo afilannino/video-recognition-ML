@@ -135,11 +135,11 @@ def create_final_model():
     consensus_dense_output = 256
 
     rgb_consensus_input = Input(shape=input_shape, name='rgb_consensus_input')
-    rgb_consensus_avg = average(rgb_consensus_input, name='rgb_consensus_avg')
+    rgb_consensus_avg = average([rgb_consensus_input], name='rgb_consensus_avg')
     rgb_consensus_dense = Dense(consensus_dense_output, name='rgb_consensus_dense')(rgb_consensus_avg)
 
     flow_consensus_input = Input(shape=input_shape, name='flow_consensus_input')
-    flow_consensus_avg = average(flow_consensus_input, name='flow_consensus_avg')
+    flow_consensus_avg = average([flow_consensus_input], name='flow_consensus_avg')
     flow_consensus_dense = Dense(consensus_dense_output, name='flow_consensus_dense')(flow_consensus_avg)
 
     final_avg = average([rgb_consensus_dense, flow_consensus_dense])
