@@ -33,14 +33,16 @@ def main():
     subsets = retrieve_videoobject_subsets(['train', 'validation'])
 
     # Train rgb model on train set
-    model_rgb = train_partial_model(model_rgb, classes, subsets[0], subsets[1], 'rgb',
-                                    batch_size=batch_size,
-                                    epoch_number=epoch_number)
+    # model_rgb = train_partial_model(model_rgb, classes, subsets[0], subsets[1], 'rgb',
+                     #               batch_size=batch_size,
+                      #              epoch_number=epoch_number)
 
     # Train flow model on train set
-    model_flow = train_partial_model(model_flow, classes, subsets[0], subsets[1], 'flow',
-                                     batch_size=batch_size,
-                                     epoch_number=epoch_number)
+    # model_flow = train_partial_model(model_flow, classes, subsets[0], subsets[1], 'flow',
+                       #              batch_size=batch_size,
+                        #             epoch_number=epoch_number)
+    model_rgb.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'partial_model_rgb-001-4.029.hdf5'))
+    model_flow.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'partial_model_flow-023-2.334.hdf5'))
 
     final_model = create_final_model()
     train_final_model(final_model, model_rgb, model_flow, classes, subsets[0], subsets[1],
