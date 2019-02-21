@@ -9,10 +9,10 @@ from utility.utility import retrieve_videoobject_subsets, limit_frames_size, pro
 
 
 def main():
-    generate_flow_frames(['train', 'validation'], sequence_length=31)
+    generate_flow_frames(['train', 'validation'])
 
 
-def generate_flow_frames(subsets, sequence_length=31, skip_existent=False):
+def generate_flow_frames(subsets, skip_existent=False):
     # Retrieve video's subsets
     videoobject_subsets = retrieve_videoobject_subsets(subsets)
 
@@ -44,7 +44,6 @@ def generate_flow_frames(subsets, sequence_length=31, skip_existent=False):
                     continue
 
             frames = glob.glob(os.path.join(frame_folder_name, 'frame-*.jpg'))
-            frames = limit_frames_size(frames, sequence_length)
 
             # Generate flow frames
             frame1 = cv2.imread(frames[0])

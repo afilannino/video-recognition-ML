@@ -93,6 +93,8 @@ def create_sequence_of_tuple_generator(
         inputs=model_rgb.input,
         outputs=model_rgb.get_layer('rgb_dense2').output
     )
+    model_flow._make_predict_function()
+    model_rgb._make_predict_function()
 
     model_rgb.summary()
     model_flow.summary()
