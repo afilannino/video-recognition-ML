@@ -148,6 +148,7 @@ def create_sequence_of_tuple_generator(
 
                 # Retrieving features
                 features_sequence = np.load(rgb_segment_feature)
+                features_sequence = features_sequence.reshape((1, feature_sequence_length, feature_length))
                 prediction_rgb = model_rgb.predict(features_sequence, batch_size=1, verbose=1)
                 predictions_list_rgb.append(prediction_rgb)
 
@@ -158,6 +159,7 @@ def create_sequence_of_tuple_generator(
 
                 # Retrieving features
                 features_sequence = np.load(flow_segment_feature)
+                features_sequence = features_sequence.reshape((1, feature_sequence_length, feature_length))
                 prediction_flow = model_flow.predict(features_sequence, batch_size=1, verbose=1)
                 predictions_list_flow.append(prediction_flow)
 
