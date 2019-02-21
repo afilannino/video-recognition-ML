@@ -94,7 +94,6 @@ def create_sequence_of_tuple_generator(
         outputs=model_rgb.get_layer('rgb_dense2').output
     )
 
-
     flow_folder_suffix = '_flowfeatures'
     flow_dataset_folder_name = 'UCF-101-flow-features'
     rgb_folder_suffix = '_features'
@@ -149,16 +148,6 @@ def create_sequence_of_tuple_generator(
 
                 # Retrieving features
                 features_sequence = np.load(rgb_segment_feature)
-                length = len(features_sequence)
-                if length > feature_sequence_length:
-                    raise Exception('Some sequences of features are too long! Please compute them again!')
-                # Zero padding if size is different from size_limit
-                elif length < feature_sequence_length:
-                    features_sequence = np.append(features_sequence,
-                                                  np.zeros((feature_sequence_length - length, feature_length),
-                                                           dtype='float32'))
-                    features_sequence = features_sequence.reshape((feature_sequence_length, feature_length))
-
                 prediction_rgb = model_rgb.predict(features_sequence, batch_size=1, verbose=1)
                 predictions_list_rgb.append(prediction_rgb)
 
@@ -169,16 +158,6 @@ def create_sequence_of_tuple_generator(
 
                 # Retrieving features
                 features_sequence = np.load(flow_segment_feature)
-                length = len(features_sequence)
-                if length > feature_sequence_length:
-                    raise Exception('Some sequences of features are too long! Please compute them again!')
-                # Zero padding if size is different from size_limit
-                elif length < feature_sequence_length:
-                    features_sequence = np.append(features_sequence,
-                                                  np.zeros((feature_sequence_length - length, feature_length),
-                                                           dtype='float32'))
-                    features_sequence = features_sequence.reshape((feature_sequence_length, feature_length))
-
                 prediction_flow = model_flow.predict(features_sequence, batch_size=1, verbose=1)
                 predictions_list_flow.append(prediction_flow)
 
