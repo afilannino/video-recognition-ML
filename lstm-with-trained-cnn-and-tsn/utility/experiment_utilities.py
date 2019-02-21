@@ -94,6 +94,9 @@ def create_sequence_of_tuple_generator(
         outputs=model_rgb.get_layer('rgb_dense2').output
     )
 
+    model_rgb.summary()
+    model_flow.summary()
+
     flow_folder_suffix = '_flowfeatures'
     flow_dataset_folder_name = 'UCF-101-flow-features'
     rgb_folder_suffix = '_features'
@@ -139,29 +142,26 @@ def create_sequence_of_tuple_generator(
             if len(flow_segment_features_list) != number_of_segment:
                 raise Exception('A video has a wrong number of feature part. Please check your parameters')
 
-            predictions_list_rgb = []
-            predictions_list_flow = []
-            for rgb_segment_feature in rgb_segment_features_list:
+            to_predict_list_rgb = []
+            to_predict_list_flow = []
 
+            for rgb_segment_feature in rgb_segment_features_list:
                 if not os.path.isfile(rgb_segment_feature):
                     raise Exception('Feature not found! You have to create all the features!')
 
                 # Retrieving features
                 features_sequence = np.load(rgb_segment_feature)
-                features_sequence = features_sequence.reshape((1, feature_sequence_length, feature_length))
-                prediction_rgb = model_rgb.predict(features_sequence, batch_size=1, verbose=1)
-                predictions_list_rgb.append(prediction_rgb)
+                to_predict_list_rgb.append(features_sequence)
+            predictions_list_rgb = model_rgb.predict(to_predict_list_rgb, batch_size=number_of_segment, verbose=1)
 
             for flow_segment_feature in flow_segment_features_list:
-
                 if not os.path.isfile(flow_segment_feature):
                     raise Exception('Feature not found! You have to create all the features!')
 
                 # Retrieving features
                 features_sequence = np.load(flow_segment_feature)
-                features_sequence = features_sequence.reshape((1, feature_sequence_length, feature_length))
-                prediction_flow = model_flow.predict(features_sequence, batch_size=1, verbose=1)
-                predictions_list_flow.append(prediction_flow)
+                to_predict_list_flow.append(features_sequence)
+            predictions_list_flow = model_flow.predict(to_predict_list_flow, batch_size=number_of_segment, verbose=1)
 
             x_batch_rgb.append(predictions_list_rgb)
             x_batch_flow.append(predictions_list_flow)
