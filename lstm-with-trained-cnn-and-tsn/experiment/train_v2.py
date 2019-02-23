@@ -13,7 +13,7 @@ from keras.optimizers import Adam
 from keras.utils import plot_model
 
 from utility.utility import retrieve_videoobject_subsets, project_root, retrieve_classes
-from utility.experiment_utilities import create_sequence_generator
+from utility.experiment_utilities import create_sequence_generator, load_and_pad
 
 project_root = project_root()
 feature_length = 2048  # This is the length of the numpy array that contains the prediction
@@ -147,13 +147,10 @@ def validate_model(model, validation_data):
                 raise Exception('Feature not found! You have to create all the features!')
 
             # Retrieving features
-            features_sequence = np.load(rgb_segment_feature)
+            features_sequence = load_and_pad(rgb_segment_feature, feature_sequence_size, feature_length)
             features_rgb.append(features_sequence)
 
-        if not check_length(features_rgb):
-            continue
-        else:
-            features_rgb = np.array(features_rgb).reshape((number_of_segment, feature_sequence_size, feature_length))
+        features_rgb = np.array(features_rgb).reshape((number_of_segment, feature_sequence_size, feature_length))
 
         for flow_segment_feature in flow_segment_features_list:
 
@@ -161,13 +158,10 @@ def validate_model(model, validation_data):
                 raise Exception('Feature not found! You have to create all the features!')
 
             # Retrieving features
-            features_sequence = np.load(flow_segment_feature)
+            features_sequence = load_and_pad(flow_segment_feature, feature_sequence_size, feature_length)
             features_flow.append(features_sequence)
 
-        if not check_length(features_flow):
-            continue
-        else:
-            features_flow = np.array(features_flow).reshape((number_of_segment, feature_sequence_size, feature_length))
+        features_flow = np.array(features_flow).reshape((number_of_segment, feature_sequence_size, feature_length))
 
         prediction = model.predict([features_rgb, features_flow], batch_size=number_of_segment, verbose=1)
         np.save(os.path.join(project_root, 'data', 'temporary'), prediction)
