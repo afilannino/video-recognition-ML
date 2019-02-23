@@ -202,7 +202,7 @@ def compute_local_consensus(prediction):
 
 
 def compute_global_consensus(local_consensus):
-    prediction = local_consensus.sum(axis=0)
+    prediction = np.average(local_consensus, axis=0)
     max_ind = prediction.argmax()
     prediction = np.zeros(prediction.size)
     prediction[max_ind] = 1
