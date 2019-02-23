@@ -35,7 +35,7 @@ def main():
     model = create_model()
 
     # Train model on train set
-    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-040-0.849-0.427.hdf5'))
+    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-025-0.906-0.502.hdf5'))
 
     model = train_model(model, subsets[0], batch_size, 25)
 
