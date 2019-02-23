@@ -114,6 +114,8 @@ def validate_model(model, validation_data):
 
     n_video = len(validation_data)
     correct_prediction = 0
+    rgb_prediction = 0
+    flow_prediction = 0
 
     flow_folder_suffix = '_flowfeatures'
     flow_dataset_folder_name = 'UCF-101-flow-features'
@@ -164,16 +166,21 @@ def validate_model(model, validation_data):
         features_flow = np.array(features_flow).reshape((number_of_segment, feature_sequence_size, feature_length))
 
         prediction = model.predict([features_rgb, features_flow], batch_size=number_of_segment, verbose=1)
-        np.save(os.path.join(project_root, 'data', 'temporary'), prediction)
 
-        local_consensus = compute_local_consensus(prediction)
+        local_consensus, rgb_predict, flow_predict = compute_local_consensus(prediction)
         global_consensus = compute_global_consensus(local_consensus)
 
         if video.label == classes[global_consensus.argmax()]:
             correct_prediction += 1
+        if video.label == classes[rgb_predict]:
+            rgb_prediction += 1
+        if video.label == classes[flow_predict]:
+            flow_prediction += 1
 
     accuracy = correct_prediction / n_video
-    return [accuracy]
+    rgb_accuracy = rgb_prediction / n_video
+    flow_accuracy = flow_prediction / n_video
+    return [accuracy, rgb_accuracy, flow_accuracy]
 
 
 def compute_local_consensus(prediction):
@@ -188,7 +195,7 @@ def compute_local_consensus(prediction):
     for i in range(num_of_prediction):
         max_ind = max_indices[i]
         prediction[i][max_ind] = 1
-    return prediction
+    return prediction, max_indices[0], max_indices[1]
 
 
 def compute_global_consensus(local_consensus):
@@ -204,7 +211,7 @@ def save_result(metrics):
     filelog_name = 'exp3-validation-' + str(timestamp) + '.csv'
     with open(os.path.join(project_root, 'data', 'result', filelog_name), 'w', newline='\n') as val_result_csv:
         val_result_csv_writer = csv.writer(val_result_csv, delimiter=',')
-        val_result_csv_writer.writerow(['accuracy'])
+        val_result_csv_writer.writerow(['val_accuracy', 'rgb_val_accuracy', 'flow_val_accuracy'])
         val_result_csv_writer.writerow(metrics)
 
 
