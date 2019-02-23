@@ -150,7 +150,10 @@ def validate_model(model, validation_data):
             features_sequence = np.load(rgb_segment_feature)
             features_rgb.append(features_sequence)
 
-        features_rgb = np.array(features_rgb).reshape((number_of_segment, feature_sequence_size, feature_length))
+        if not check_length(features_rgb):
+            continue
+        else:
+            features_rgb = np.array(features_rgb).reshape((number_of_segment, feature_sequence_size, feature_length))
 
         for flow_segment_feature in flow_segment_features_list:
 
@@ -161,7 +164,10 @@ def validate_model(model, validation_data):
             features_sequence = np.load(flow_segment_feature)
             features_flow.append(features_sequence)
 
-        features_flow = np.array(features_flow).reshape((number_of_segment, feature_sequence_size, feature_length))
+        if not check_length(features_flow):
+            continue
+        else:
+            features_flow = np.array(features_flow).reshape((number_of_segment, feature_sequence_size, feature_length))
 
         prediction = model.predict([features_rgb, features_flow], batch_size=number_of_segment, verbose=1)
         np.save(os.path.join(project_root, 'data', 'temporary'), prediction)
@@ -177,10 +183,10 @@ def validate_model(model, validation_data):
 
 
 def compute_local_consensus(prediction):
-    num_of_prediction = prediction.shape[0]
-    prediction_length = prediction.shape[1]
-
     prediction = np.array(prediction)
+    num_of_prediction = prediction.shape[0]
+    prediction_length = prediction.shape[2]
+
     prediction = prediction.sum(axis=1)
     max_indices = prediction.argmax(axis=1)
 
@@ -206,6 +212,15 @@ def save_result(metrics):
         val_result_csv_writer = csv.writer(val_result_csv, delimiter=',')
         val_result_csv_writer.writerow(['accuracy'])
         val_result_csv_writer.writerow(metrics)
+
+
+def check_length(features):
+    features = np.array(features)
+    for feature in features:
+        feature = np.array(feature)
+        if feature.size is not feature_length:
+            return False
+    return True
 
 
 if __name__ == '__main__':
