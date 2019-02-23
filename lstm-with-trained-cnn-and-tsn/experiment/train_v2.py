@@ -35,8 +35,6 @@ def main():
     model = create_model()
 
     # Train model on train set
-    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-025-0.906-0.502.hdf5'))
-
     model = train_model(model, subsets[0], batch_size, 25)
 
     # Validate model
@@ -65,13 +63,14 @@ def create_model():
     flow_dense_final = Dense(classes_size, activation='softmax', name='flow_dense_final')(flow_dropout)
 
     model = Model(inputs=[rgb_input, flow_input], outputs=[rgb_dense_final, flow_dense_final])
+    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-025-0.906-0.502.hdf5'))
 
     # Hyper parameters
     loss = 'categorical_crossentropy'
     optimizer = Adam(lr=1e-5, decay=1e-6)
     metrics = ['accuracy', 'top_k_categorical_accuracy']
 
-    plot_model(model, to_file='model_partial_rgb.png', show_shapes=True)
+    plot_model(model, to_file='model.png', show_shapes=True)
 
     # Model created
     model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
