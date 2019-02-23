@@ -79,7 +79,8 @@ def train_model(model, train_data, batch_size, epoch_number):
         filepath=os.path.join(project_root, 'data', 'result', 'model_weights',
                               'tsn_model-{epoch:03d}-{rgb_dense_final_acc:.3f}-{flow_dense_final_acc:.3f}.hdf5'),
         verbose=1,
-        save_best_only=True)
+        monitor='loss',
+        save_best_only=False)
 
     # Callback: function to log result
     filelog_name = 'tsn_model-training-' + str(timestamp) + '.log'
