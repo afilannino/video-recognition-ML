@@ -46,13 +46,11 @@ def create_model():
     input_shape = (feature_sequence_size, feature_length)
 
     rgb_input = Input(shape=input_shape, name='rgb_input')
-    rgb_input.trainable = False
     rgb_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
     rgb_lstm.trainable = False
     rgb_dense1 = Dense(512, name='rgb_dense1')(rgb_lstm)
     rgb_dense1.trainable = False
     rgb_dropout = Dropout(0.5, name='rgb_dropout')(rgb_dense1)
-    rgb_dropout.trainable = False
     rgb_dense_final = Dense(classes_size, activation='softmax', name='rgb_dense_final')(rgb_dropout)
     rgb_dense_final.trainable = False
 
