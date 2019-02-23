@@ -35,8 +35,13 @@ def main():
     model = create_model()
 
     # Train model on train set
-    # model = train_model(model, subsets[0], batch_size, epoch_number)
+
     model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-040-0.849-0.427.hdf5'))
+    model.get_layer('rgb_lstm').trainable = False
+    model.get_layer('rgb_dense1').trainable = False
+    # model.get_layer('rgb_dense_final').trainable = False
+    # model.get_layer('rgb_dropout').trainable = False
+    model = train_model(model, subsets[0], batch_size, 25)
 
     # Validate model
     metrics = validate_model(model, subsets[1])
