@@ -20,29 +20,30 @@ classes = retrieve_classes()
 def main():
     videoobject_subsets = retrieve_videoobject_subsets(['train', 'validation'])
     model = create_trained_inceptionv3_model()
-    # generate_and_store_features(videoobject_subsets, model, flow_feature=False)
-    generate_and_store_features(videoobject_subsets, model, flow_feature=True)
+    generate_and_store_features(videoobject_subsets, model, flow_feature=False)
+    # generate_and_store_features(videoobject_subsets, model, flow_feature=True)
 
 
 def create_trained_inceptionv3_model():
-    model_weights = os.path.join(project_root, 'data', 'result_trainCNN_final', 'model_weights',
-                                 'cnn-training-010-6.011.hdf5')
+    # model_weights = os.path.join(project_root, 'data', 'result_trainCNN_final', 'model_weights',
+    #                             'cnn-training-010-6.011.hdf5')
 
-    base_model = InceptionV3(weights='imagenet', include_top=False)
-    x = base_model.output
-    x = GlobalAveragePooling2D(name='final_avg_pool')(x)
-    x = Dense(1024, activation='relu', name='final_dense')(x)
+    base_model = InceptionV3(weights='imagenet', include_top=True)
+    # x = base_model.output
+    # x = GlobalAveragePooling2D(name='final_avg_pool')(x)
+    # x = Dense(1024, activation='relu', name='final_dense')(x)
 
-    predictions = Dense(len(classes), activation='softmax')(x)
+    # predictions = Dense(len(classes), activation='softmax')(x)
 
-    model = Model(inputs=base_model.input, outputs=predictions)
-    if os.path.exists(model_weights):
-        model.load_weights(model_weights)
-    else:
-        raise Exception('No model weights found!')
+    model = Model(inputs=base_model.input, outputs=base_model.get_layer('avg_pool').output)
+    return model
+    # if os.path.exists(model_weights):
+    #    model.load_weights(model_weights)
+    # else:
+    #   raise Exception('No model weights found!')
 
-    trained_model = Model(input=model.input, output=model.get_layer('final_avg_pool').output)
-    return trained_model
+    # trained_model = Model(input=model.input, output=model.get_layer('final_avg_pool').output)
+    # return trained_model
 
 
 def generate_and_store_features(videoobject_subsets, model, skip_existent=True, flow_feature=False):

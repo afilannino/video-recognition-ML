@@ -94,7 +94,7 @@ def load_and_pad(feature_name, feature_sequence_length, feature_length):
 
 # def create_sequence_of_tuple_generator(
 #         subset, batch_size, feature_sequence_length, feature_length, model_flow, model_rgb, number_of_segment):
-# 
+#
 #     classes = retrieve_classes()
 #     counter = 0
 #
