@@ -77,7 +77,7 @@ def train_model(model, train_data, batch_size, epoch_number):
     # Callback: function to save the model weights
     model_saver = ModelCheckpoint(
         filepath=os.path.join(project_root, 'data', 'result', 'model_weights',
-                              'tsn_model-{epoch:03d}-{val_loss:.3f}.hdf5'),
+                              'tsn_model-{epoch:03d}-{rgb_dense_final_acc:.3f}-{flow_dense_final_acc:.3f}.hdf5'),
         verbose=1,
         save_best_only=True)
 
@@ -101,7 +101,7 @@ def train_model(model, train_data, batch_size, epoch_number):
                         steps_per_epoch=train_steps_per_epoch,
                         epochs=epoch_number,
                         verbose=1,
-                        callbacks=[model_saver, csv_logger, es])
+                        callbacks=[model_saver, csv_logger])
 
     # create_plot(filelog_name)
     print('Model trained!')
