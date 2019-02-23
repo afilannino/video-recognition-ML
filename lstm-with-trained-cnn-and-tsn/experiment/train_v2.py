@@ -35,12 +35,8 @@ def main():
     model = create_model()
 
     # Train model on train set
-
     model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-040-0.849-0.427.hdf5'))
-    model.get_layer('rgb_lstm').trainable = False
-    model.get_layer('rgb_dense1').trainable = False
-    # model.get_layer('rgb_dense_final').trainable = False
-    # model.get_layer('rgb_dropout').trainable = False
+
     model = train_model(model, subsets[0], batch_size, 25)
 
     # Validate model
@@ -53,7 +49,9 @@ def create_model():
 
     rgb_input = Input(shape=input_shape, name='rgb_input')
     rgb_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
+    rgb_lstm.trainable = False
     rgb_dense1 = Dense(512, name='rgb_dense1')(rgb_lstm)
+    rgb_dense1.trainable = False
     rgb_dropout = Dropout(0.5, name='rgb_dropout')(rgb_dense1)
     rgb_dense_final = Dense(classes_size, activation='softmax', name='rgb_dense_final')(rgb_dropout)
 
