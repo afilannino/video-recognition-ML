@@ -35,7 +35,8 @@ def main():
     model = create_model()
 
     # Train model on train set
-    model = train_model(model, subsets[0], batch_size, epoch_number)
+    # model = train_model(model, subsets[0], batch_size, epoch_number)
+    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-040-0.849-0.427.hdf5'))
 
     # Validate model
     metrics = validate_model(model, subsets[1])
@@ -163,6 +164,7 @@ def validate_model(model, validation_data):
         features_flow = np.array(features_flow).reshape((number_of_segment, feature_sequence_size, feature_length))
 
         prediction = model.predict([features_rgb, features_flow], batch_size=number_of_segment, verbose=1)
+        np.save(os.path.join(project_root, 'data', 'temporary'), prediction)
 
         local_consensus = compute_local_consensus(prediction)
         global_consensus = compute_global_consensus(local_consensus)
