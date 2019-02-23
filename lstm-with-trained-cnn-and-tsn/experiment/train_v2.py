@@ -35,7 +35,7 @@ def main():
     model = create_model()
 
     # Train model on train set
-    model = train_model(model, subsets[0], batch_size, 25)
+    # model = train_model(model, subsets[0], batch_size, 25)
 
     # Validate model
     metrics = validate_model(model, subsets[1])
@@ -191,7 +191,7 @@ def compute_local_consensus(prediction):
     num_of_prediction = prediction.shape[0]
     prediction_length = prediction.shape[2]
 
-    prediction = prediction.sum(axis=1)
+    prediction = np.average(prediction, axis=1)
     max_indices = prediction.argmax(axis=1)
 
     prediction = np.zeros((num_of_prediction, prediction_length))
