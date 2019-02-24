@@ -27,7 +27,7 @@ classes = retrieve_classes()
 def main():
     # Hyper parameters
     batch_size = 66
-    epoch_number = 40
+    epoch_number = 10
 
     subsets = retrieve_videoobject_subsets(['train', 'validation'])
 
@@ -35,7 +35,7 @@ def main():
     model = create_model()
 
     # Train model on train set
-    # model = train_model(model, subsets[0], batch_size, 25)
+    model = train_model(model, subsets[0], batch_size, epoch_number)
 
     # Validate model
     metrics = validate_model(model, subsets[1])
@@ -47,12 +47,9 @@ def create_model():
 
     rgb_input = Input(shape=input_shape, name='rgb_input')
     rgb_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
-    rgb_lstm.trainable = False
     rgb_dense1 = Dense(512, name='rgb_dense1')(rgb_lstm)
-    rgb_dense1.trainable = False
     rgb_dropout = Dropout(0.5, name='rgb_dropout')(rgb_dense1)
     rgb_dense_final = Dense(classes_size, activation='softmax', name='rgb_dense_final')(rgb_dropout)
-    rgb_dense_final.trainable = False
 
     flow_input = Input(shape=input_shape, name='flow_input')
     flow_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='flow_lstm')(flow_input)
@@ -216,15 +213,6 @@ def save_result(metrics):
         val_result_csv_writer = csv.writer(val_result_csv, delimiter=',')
         val_result_csv_writer.writerow(['val_accuracy', 'rgb_val_accuracy', 'flow_val_accuracy'])
         val_result_csv_writer.writerow(metrics)
-
-
-def check_length(features):
-    features = np.array(features)
-    for feature in features:
-        feature = np.array(feature)
-        if feature.size is not feature_length:
-            return False
-    return True
 
 
 if __name__ == '__main__':
