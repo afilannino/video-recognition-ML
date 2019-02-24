@@ -27,7 +27,7 @@ classes = retrieve_classes()
 def main():
     # Hyper parameters
     batch_size = 66
-    epoch_number = 15
+    epoch_number = 60
 
     subsets = retrieve_videoobject_subsets(['train', 'validation'])
 
@@ -46,19 +46,19 @@ def create_model():
     input_shape = (feature_sequence_size, feature_length)
 
     rgb_input = Input(shape=input_shape, name='rgb_input')
-    rgb_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
+    rgb_lstm = LSTM(2560, return_sequences=False, dropout=0.5, name='rgb_lstm')(rgb_input)
     rgb_dense1 = Dense(512, name='rgb_dense1')(rgb_lstm)
     rgb_dropout = Dropout(0.5, name='rgb_dropout')(rgb_dense1)
     rgb_dense_final = Dense(classes_size, activation='softmax', name='rgb_dense_final')(rgb_dropout)
 
     flow_input = Input(shape=input_shape, name='flow_input')
-    flow_lstm = LSTM(2048, return_sequences=False, dropout=0.5, name='flow_lstm')(flow_input)
+    flow_lstm = LSTM(2560, return_sequences=False, dropout=0.5, name='flow_lstm')(flow_input)
     flow_dense1 = Dense(512, name='flow_dense1')(flow_lstm)
     flow_dropout = Dropout(0.5, name='flow_dropout')(flow_dense1)
     flow_dense_final = Dense(classes_size, activation='softmax', name='flow_dense_final')(flow_dropout)
 
     model = Model(inputs=[rgb_input, flow_input], outputs=[rgb_dense_final, flow_dense_final])
-    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-015-0.783-0.379.hdf5'))
+# model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-015-0.783-0.379.hdf5'))
 
     # Hyper parameters
     loss = 'categorical_crossentropy'
@@ -81,7 +81,7 @@ def train_model(model, train_data, batch_size, epoch_number):
                               'tsn_model-{epoch:03d}-{rgb_dense_final_acc:.3f}-{flow_dense_final_acc:.3f}.hdf5'),
         verbose=1,
         monitor='loss',
-        save_best_only=False)
+        save_best_only=True)
 
     # Callback: function to log result
     filelog_name = 'tsn_model-training-' + str(timestamp) + '.log'
