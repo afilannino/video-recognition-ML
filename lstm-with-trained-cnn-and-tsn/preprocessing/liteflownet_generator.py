@@ -23,10 +23,12 @@ def generate_flow_frames(subset, skip_existent=False):
 
     # Starting looping over subset of videos
     for video in subset:
-        video_base = os.path.join(project_root(), 'data', 'UCF-101', video.label, 'v_' + video.label + '_' +
-                                  video.group + '_' + video.clip)
-        frame_folder_name = video_base + '_frames'
-        flow_frame_folder_name = video_base + '_flowframes'
+        frames_folder_root = os.path.join(project_root(), 'data', 'UCF-101-frames', video.label, 'v_' + video.label +
+                                          '_' + video.group + '_' + video.clip)
+        flowframes_folder_root = os.path.join(project_root(), 'data', 'UCF-101-flowframes', video.label, 'v_' +
+                                              video.label + '_' + video.group + '_' + video.clip)
+        frame_folder_name = frames_folder_root + '_frames'
+        flow_frame_folder_name = flowframes_folder_root + '_flowframes'
         if not os.path.exists(flow_frame_folder_name):
             os.mkdir(flow_frame_folder_name)
         if not os.path.exists(frame_folder_name):
