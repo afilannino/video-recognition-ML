@@ -58,7 +58,7 @@ def create_model():
     flow_dense_final = Dense(classes_size, activation='softmax', name='flow_dense_final')(flow_dropout)
 
     model = Model(inputs=[rgb_input, flow_input], outputs=[rgb_dense_final, flow_dense_final])
-    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-020-0.873-0.298.hdf5'))
+    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-020-0.911-0.343.hdf5'))
 
     # Hyper parameters
     loss = 'categorical_crossentropy'
