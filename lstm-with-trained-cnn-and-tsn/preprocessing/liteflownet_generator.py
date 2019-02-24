@@ -30,7 +30,7 @@ def generate_flow_frames(subset, skip_existent=False):
         frame_folder_name = frames_folder_root + '_frames'
         flow_frame_folder_name = flowframes_folder_root + '_flowframes'
         if not os.path.exists(flow_frame_folder_name):
-            os.mkdir(flow_frame_folder_name)
+            os.makedirs(flow_frame_folder_name)
         if not os.path.exists(frame_folder_name):
             raise Exception('You have to generate frames first and then create the optical flow frames!')
 
@@ -49,13 +49,13 @@ def generate_flow_frames(subset, skip_existent=False):
 
 
 def generate_and_store_flowframes(frames, flow_frame_folder_name):
-    for i, frame in enumerate(frames):
+    for i in range(len(frames)):
         if i == len(frames) - 1:
             break
 
         # generate optical flow
         temp_path = os.path.join(project_root(), 'data', 'result', 'image.flo')
-        run('default', frame[i], frame[i+1], temp_path)
+        run('default', frames[i], frames[i+1], temp_path)
 
         # save it as image
         flow = Flow()
