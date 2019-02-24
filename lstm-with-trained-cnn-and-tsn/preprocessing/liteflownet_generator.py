@@ -60,7 +60,7 @@ def generate_and_store_flowframes(frames, flow_frame_folder_name):
         # save it as image
         flow = Flow()
         img = flow.convertFromFile(temp_path)
-        to_save = os.path.join(flow_frame_folder_name, 'flowframe-{:0>4d}.png')
+        to_save = os.path.join(flow_frame_folder_name, 'flowframe-{:0>4d}.png'.format(i))
         plt.imsave(to_save, img)
 
 
