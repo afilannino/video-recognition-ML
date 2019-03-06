@@ -36,7 +36,7 @@ def generate_flow_frames(subset, skip_existent=True):
 
         # Skip folder if frames have been already generated
         if skip_existent:
-            first_flow_frame_filename = os.path.join(flow_frame_folder_name, 'flowframe-0001.jpg')
+            first_flow_frame_filename = os.path.join(flow_frame_folder_name, 'flowframe-0001.png')
             if os.path.exists(first_flow_frame_filename):
                 progress_bar.update(1)
                 continue
