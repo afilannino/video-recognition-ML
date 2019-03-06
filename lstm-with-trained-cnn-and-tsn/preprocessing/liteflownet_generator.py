@@ -15,7 +15,7 @@ def main():
     generate_flow_frames(subsets[1])
 
 
-def generate_flow_frames(subset, skip_existent=False):
+def generate_flow_frames(subset, skip_existent=True):
     # Initializing progress bar
     length = len(subset)
     print('Starting flow frames generation')
@@ -25,7 +25,7 @@ def generate_flow_frames(subset, skip_existent=False):
     for video in subset:
         frames_folder_root = os.path.join(project_root(), 'data', 'UCF-101-frames', video.label, 'v_' + video.label +
                                           '_' + video.group + '_' + video.clip)
-        flowframes_folder_root = os.path.join(project_root(), 'data', 'UCF-101-flowframes', video.label, 'v_' +
+        flowframes_folder_root = os.path.join('/', 'additional-storage', 'UCF-101-flowframes', video.label, 'v_' +
                                               video.label + '_' + video.group + '_' + video.clip)
         frame_folder_name = frames_folder_root + '_frames'
         flow_frame_folder_name = flowframes_folder_root + '_flowframes'
