@@ -128,3 +128,5 @@ venv.bak/
 *.avi
 *.jpg
 *.log
+*.csv
+*.rar
