@@ -10,15 +10,15 @@ from keras.callbacks import ModelCheckpoint, CSVLogger
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.models import Model
 from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator
-# from keras_preprocessing.image import ImageDataGenerator
+# from keras.preprocessing.image import ImageDataGenerator
+from keras_preprocessing.image import ImageDataGenerator
 
 from utility.utility import retrieve_classes, project_root, retrieve_videoobject_subsets, limit_frames_number
 
 project_root = project_root()
 classes = retrieve_classes()
 flowframes_considered_per_video = 60
-batch_size = 128
+batch_size = 256
 epochs = 50
 
 
@@ -46,7 +46,7 @@ def main():
     model.fit_generator(
         train_generator,
         steps_per_epoch=train_generator.samples // batch_size,
-        epochs=5
+        epochs=3
     )
 
     # PART 2
@@ -114,14 +114,14 @@ def create_data_generator():
 
 
 def create_dataframe():
-    subsets = retrieve_videoobject_subsets(['train', 'validation'])
+    subsets = retrieve_videoobject_subsets(['train'])
     total_frames_list = []
 
     # Initializing progress bar
     length = 0
     for videoobject_subset in subsets:
         length += len(videoobject_subset)
-    print('Starting feature extraction from each frames in subsets')
+    print('Starting dataframe creation for image_generator')
     progress_bar = tqdm.tqdm(total=length)
 
     # Starting looping over subset of videos
