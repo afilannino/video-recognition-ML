@@ -10,8 +10,8 @@ from keras.callbacks import ModelCheckpoint, CSVLogger
 from keras.layers import Dense, GlobalAveragePooling2D
 from keras.models import Model
 from keras.optimizers import Adam
-# from keras.preprocessing.image import ImageDataGenerator
-from keras_preprocessing.image import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator
+# from keras_preprocessing.image import ImageDataGenerator
 
 from utility.utility import retrieve_classes, project_root, retrieve_videoobject_subsets, limit_frames_number
 
@@ -140,13 +140,13 @@ def create_dataframe():
 
             label = video.label
 
-            frames_list = glob.glob(frames_folder)
+            frames_list = glob.glob(os.path.join(frames_folder, '*'))
             frames_list = limit_frames_number(frames_list, flowframes_considered_per_video)
             for frame in frames_list:
                 total_frames_list.append((frame, label))
 
-            flowframes_list = glob.glob(flowframes_folder)
-            frames_list = limit_frames_number(frames_list, flowframes_considered_per_video)
+            flowframes_list = glob.glob(os.path.join(flowframes_folder, '*'))
+            flowframes_list = limit_frames_number(flowframes_list, flowframes_considered_per_video)
             for frame in flowframes_list:
                 total_frames_list.append((frame, label))
             progress_bar.update(1)
