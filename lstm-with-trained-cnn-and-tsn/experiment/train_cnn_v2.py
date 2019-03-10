@@ -13,10 +13,11 @@ from keras.optimizers import Adam
 # from keras.preprocessing.image import ImageDataGenerator
 from keras_preprocessing.image import ImageDataGenerator
 
-from utility.utility import retrieve_classes, project_root, retrieve_videoobject_subsets
+from utility.utility import retrieve_classes, project_root, retrieve_videoobject_subsets, limit_frames_number
 
 project_root = project_root()
 classes = retrieve_classes()
+flowframes_considered_per_video = 60
 batch_size = 128
 epochs = 50
 
@@ -140,10 +141,12 @@ def create_dataframe():
             label = video.label
 
             frames_list = glob.glob(frames_folder)
+            frames_list = limit_frames_number(frames_list, flowframes_considered_per_video)
             for frame in frames_list:
                 total_frames_list.append((frame, label))
 
             flowframes_list = glob.glob(flowframes_folder)
+            frames_list = limit_frames_number(frames_list, flowframes_considered_per_video)
             for frame in flowframes_list:
                 total_frames_list.append((frame, label))
             progress_bar.update(1)
