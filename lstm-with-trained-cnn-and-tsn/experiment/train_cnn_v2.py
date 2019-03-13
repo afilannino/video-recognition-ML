@@ -37,6 +37,19 @@ def main():
     optimizer = Adam(lr=1e-5, decay=1e-6)
     metrics = ['accuracy', 'top_k_categorical_accuracy']
 
+    # Callback: function to log result
+    timestamp = time.time()
+    filelog_name = 'cnn-training-init-' + str(timestamp) + '.log'
+    log_path = os.path.join(project_root, 'data', 'result', 'logs', filelog_name)
+    csv_logger = CSVLogger(log_path)
+
+    # Callback: function to save the model weights
+    model_saver = ModelCheckpoint(
+        filepath=os.path.join(project_root, 'data', 'result', 'model_weights',
+                              'cnn-training-init-{epoch:03d}.hdf5'),
+        verbose=1,
+        save_best_only=False)
+
     # PART 1
     for layer in base_model.layers:
         layer.trainable = False
@@ -46,6 +59,7 @@ def main():
     model.fit_generator(
         train_generator,
         steps_per_epoch=train_generator.samples // batch_size,
+        callbacks=[model_saver, csv_logger],
         epochs=3
     )
 
@@ -59,13 +73,13 @@ def main():
     # Callback: function to save the model weights
     model_saver = ModelCheckpoint(
         filepath=os.path.join(project_root, 'data', 'result', 'model_weights',
-                              'cnn-training-{epoch:03d}-{val_loss:.3f}.hdf5'),
+                              'cnn-training-real-{epoch:03d}.hdf5'),
         verbose=1,
-        save_best_only=True)
+        save_best_only=False)
 
     # Callback: function to log result
     timestamp = time.time()
-    filelog_name = 'cnn-training-' + str(timestamp) + '.log'
+    filelog_name = 'cnn-training-real-' + str(timestamp) + '.log'
     log_path = os.path.join(project_root, 'data', 'result', 'logs', filelog_name)
     csv_logger = CSVLogger(log_path)
 
