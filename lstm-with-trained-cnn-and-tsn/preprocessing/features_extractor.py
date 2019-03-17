@@ -25,7 +25,7 @@ def main():
 
 
 def create_trained_inceptionv3_model():
-    model_weights = os.path.join(project_root, 'data', 'result', 'model_weights',
+    model_weights = os.path.join(project_root, 'data', 'result_retrain_v2', 'model_weights',
                                  'cnn-training-real-009.hdf5')
 
     if not os.path.exists(model_weights):
@@ -44,9 +44,9 @@ def create_trained_inceptionv3_model():
 
     model_for_feature = Model(
         model.input,
-        model.get_layer('final_avg_pool')
+        model.get_layer('final_avg_pool').output
     )
-    
+
     return model_for_feature
 
 
