@@ -11,7 +11,7 @@ project_root = project_root()
 
 
 def create_sequence_generator(
-        subset, classes, batch_size, feature_sequence_length, feature_length, flow_feature, number_of_segment):
+        subset, classes, batch_size, feature_sequence_length, feature_length, number_of_segment):
     if batch_size % number_of_segment != 0:
         raise Exception('Batch size must be divisible by number of segment')
 
@@ -57,7 +57,7 @@ def create_sequence_generator(
             flow_segment_features_list = glob.glob(flow_feature_filename_pattern)
 
             if len(rgb_segment_features_list) != number_of_segment or len(flow_segment_features_list) != number_of_segment:
-                raise Exception('A video has a wrong number of feature part. Please check your parameters')
+                raise Exception('A video has a wrong number of feature parts. Please check your parameters')
 
             for segment_feature in rgb_segment_features_list:
                 if not os.path.isfile(segment_feature):
