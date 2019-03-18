@@ -5,7 +5,7 @@ import glob
 import numpy as np
 import csv
 
-from keras.callbacks import ModelCheckpoint, CSVLogger, TensorBoard, EarlyStopping
+from keras.callbacks import ModelCheckpoint, CSVLogger, TensorBoard, EarlyStopping, Callback, LambdaCallback
 from keras.layers import Dense, Dropout, Input
 from keras.layers.recurrent import LSTM
 from keras.models import Model
@@ -27,7 +27,7 @@ classes = retrieve_classes()
 def main():
     # Hyper parameters
     batch_size = 66
-    epoch_number = 60
+    epoch_number = 50
 
     subsets = retrieve_videoobject_subsets(['train', 'validation'])
 
@@ -35,7 +35,7 @@ def main():
     model = create_model()
 
     # Train model on train set
-    model = train_model(model, subsets[0], batch_size, epoch_number)
+    model = train_model(model, subsets[0], subsets[1], batch_size, epoch_number)
 
     # Validate model
     metrics = validate_model(model, subsets[1])
@@ -73,7 +73,7 @@ def create_model():
     return model
 
 
-def train_model(model, train_data, batch_size, epoch_number):
+def train_model(model, train_data, validation_data, batch_size, epoch_number):
     timestamp = time.time()
     # Callback: function to save the model weights
     model_saver = ModelCheckpoint(
@@ -92,18 +92,29 @@ def train_model(model, train_data, batch_size, epoch_number):
     tb = TensorBoard(log_dir=os.path.join(project_root, 'data', 'result', 'logs'))
 
     # Callback: EarlyStopping
-    es = EarlyStopping(patience=5)
+    es = EarlyStopping(patience=8)
+
+    # Callback: Validation Lambda
+    validation_lambda = LambdaCallback(
+        on_epoch_end=lambda epoch, logs: validate_model(model, validation_data)
+    )
 
     train_steps_per_epoch = math.ceil(len(train_data) / batch_size)
 
     train_sequence_generator = create_sequence_generator(
-        train_data, classes, batch_size, feature_sequence_size, feature_length, type, number_of_segment)
+        train_data,
+        classes,
+        batch_size,
+        feature_sequence_size,
+        feature_length,
+        number_of_segment
+    )
 
     model.fit_generator(generator=train_sequence_generator,
                         steps_per_epoch=train_steps_per_epoch,
                         epochs=epoch_number,
                         verbose=1,
-                        callbacks=[model_saver, csv_logger])
+                        callbacks=[model_saver, csv_logger, validation_lambda, es])
 
     # create_plot(filelog_name)
     print('Model trained!')
@@ -180,7 +191,9 @@ def validate_model(model, validation_data):
     accuracy = correct_prediction / n_video
     rgb_accuracy = rgb_prediction / n_video
     flow_accuracy = flow_prediction / n_video
-    return [accuracy, rgb_accuracy, flow_accuracy]
+    metrics = [accuracy, rgb_accuracy, flow_accuracy]
+    save_result(metrics)
+    return metrics
 
 
 def compute_local_consensus(prediction):
