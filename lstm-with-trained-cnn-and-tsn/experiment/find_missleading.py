@@ -28,7 +28,7 @@ def main():
     model = create_model()
 
     # Validate model
-    metrics = validate_model(model, subsets[1])
+    metrics = validate_model(model, subsets[0])
     save_result(metrics)
 
 
@@ -48,7 +48,7 @@ def create_model():
     flow_dense_final = Dense(classes_size, activation='softmax', name='flow_dense_final')(flow_dropout)
 
     model = Model(inputs=[rgb_input, flow_input], outputs=[rgb_dense_final, flow_dense_final])
-    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-020-0.980-0.523.hdf5'))
+    model.load_weights(os.path.join(project_root, 'data', 'result', 'model_weights', 'tsn_model-030-0.9940-0.676.hdf5'))
 
     # Hyper parameters
     loss = 'categorical_crossentropy'
@@ -141,6 +141,9 @@ def validate_model(model, validation_data):
     flow_accuracy = flow_prediction / n_video
     metrics = [accuracy, rgb_accuracy, flow_accuracy]
     save_result(metrics)
+    save_miss_leading(global_classification, 'miss_leading')
+    save_miss_leading(rgb_classification, 'rgb')
+    save_miss_leading(flow_classification, 'flow')
     return metrics
 
 
@@ -174,6 +177,16 @@ def save_result(metrics):
         val_result_csv_writer = csv.writer(val_result_csv, delimiter=',')
         val_result_csv_writer.writerow(['val_accuracy', 'rgb_val_accuracy', 'flow_val_accuracy'])
         val_result_csv_writer.writerow(metrics)
+
+
+def save_miss_leading(mylist, name):
+    timestamp = time.time()
+    filelog_name = 'exp3-' + name + '-' + str(timestamp) + '.csv'
+    with open(os.path.join(project_root, 'data', 'result', filelog_name), 'w', newline='\n') as val_result_csv:
+        val_result_csv_writer = csv.writer(val_result_csv, delimiter=',')
+        val_result_csv_writer.writerow(classes)
+        for element in mylist:
+            val_result_csv_writer.writerow(element)
 
 
 if __name__ == '__main__':
