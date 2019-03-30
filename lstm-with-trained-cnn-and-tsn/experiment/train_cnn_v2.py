@@ -18,7 +18,7 @@ from utility.utility import retrieve_classes, project_root, retrieve_videoobject
 project_root = project_root()
 classes = retrieve_classes()
 flowframes_considered_per_video = 60
-batch_size = 256
+batch_size = 220
 epochs = 50
 
 
